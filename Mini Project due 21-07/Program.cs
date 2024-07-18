@@ -59,7 +59,7 @@ void AddClassroom()
     {
         courseName = Course.Frontend;
         Classroom<object> classrooms = new Classroom<object>(className, courseName);
-        classrooms.Add(classrooms);
+        classrooms.Adds(classrooms);
     }
     else
     {
