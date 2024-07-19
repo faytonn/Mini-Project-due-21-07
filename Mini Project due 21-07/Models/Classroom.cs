@@ -10,7 +10,7 @@ namespace Mini_Project_due_21_07.Models
         private static int _id;
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Student> Students;
+        public List<Student> Students { get; set; }
         public Course CourseName { get; set; }
 
         public Classroom(string name, Course courseName)
@@ -44,6 +44,7 @@ namespace Mini_Project_due_21_07.Models
             {
                 throw new ClassroomNotFoundException("Classroom not found.");
             }
+            Students.Add(student);
 
         }
 
