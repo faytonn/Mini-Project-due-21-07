@@ -1,4 +1,5 @@
-﻿using Mini_Project_due_21_07.Enums;
+﻿using Mini_Project_due_21_07;
+using Mini_Project_due_21_07.Enums;
 using Mini_Project_due_21_07.Models;
 using Mini_Project_due_21_07.Utilities;
 using Newtonsoft.Json;
@@ -7,6 +8,9 @@ using Newtonsoft.Json;
 string path = @"C:\Users\Fatima\source\repos\Mini Project due 21-07\Mini Project due 21-07.sln.json";
 
 string environment = Environment.GetEnvironmentVariable(path);
+
+
+Console.WriteLine(environment);
 
 string json = JsonConvert.SerializeObject
 
@@ -52,14 +56,15 @@ void AddClassroom()
     if (chosenCourseName == "Backend")
     {
         courseName = Course.Backend;
-        Classroom<object> classrooms = new Classroom<object>(className, courseName);
-        classrooms.Add(classrooms);
+        Classroom classroom = new(className, courseName);
+
+
     }
     else if (chosenCourseName == "Frontend")
     {
         courseName = Course.Frontend;
-        Classroom<object> classrooms = new Classroom<object>(className, courseName);
-        classrooms.Adds(classrooms);
+        Classroom classroom = new Classroom(className, courseName);
+
     }
     else
     {
@@ -79,5 +84,5 @@ void AddStudent()
     Console.Write("Course to enroll in: ");
     string courseName = Console.ReadLine();
 
-    Classroom
+    Student student = new Student(studentName, studentSurname, courseName);
 }

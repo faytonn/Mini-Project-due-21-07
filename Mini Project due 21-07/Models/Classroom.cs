@@ -5,7 +5,7 @@ using Mini_Project_due_21_07.Exceptions;
 
 namespace Mini_Project_due_21_07.Models
 {
-    public class Classroom<T>
+    public class Classroom
     {
         private static int _id;
         public int Id { get; set; }
@@ -23,7 +23,7 @@ namespace Mini_Project_due_21_07.Models
 
         public void AddStudent(Student student)
         {
-            int limit;
+            int limit=0;
             if (CourseName == Course.Backend)
             {
                 limit = 15;
@@ -38,7 +38,7 @@ namespace Mini_Project_due_21_07.Models
             }
             else if (Students.Count < limit)
             {
-                throw new LimitExceededException("Limit was exceeded. Backend classes can have 15 students, Frontend classes can have 20 students maximum.")
+                throw new LimitExceededException("Limit was exceeded. Backend classes can have 15 students, Frontend classes can have 20 students maximum.");
             }
             else
             {
