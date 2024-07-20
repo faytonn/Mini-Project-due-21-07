@@ -102,7 +102,7 @@ namespace Mini_Project_due_21_07.Models
             throw new StudentNotFoundException("Student not found.");
         }
 
-        public static Student RemoveStudent(Student student, int studentId)
+        public  Student RemoveStudent(Student student, int studentId)
         {
             for (int i = 0; i < Students.Count; i++)
             {
