@@ -1,5 +1,6 @@
 ﻿using Mini_Project_due_21_07;
 using Mini_Project_due_21_07.Enums;
+using Mini_Project_due_21_07.Exceptions;
 using Mini_Project_due_21_07.Models;
 using Mini_Project_due_21_07.Utilities;
 using Newtonsoft.Json;
@@ -221,7 +222,7 @@ void RemoveStudent()
                     }
                     else
                     {
-
+                        Color.WriteLine("Wrong command used.", ConsoleColor.White, ConsoleColor.DarkRed);
                     }
                 }
             }
