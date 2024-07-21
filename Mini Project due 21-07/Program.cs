@@ -3,7 +3,6 @@ using Mini_Project_due_21_07.Enums;
 using Mini_Project_due_21_07.Exceptions;
 using Mini_Project_due_21_07.Models;
 using Mini_Project_due_21_07.Utilities;
-using Newtonsoft.Json;
 
 
 //string classroomsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Jsons", "classrooms.json");
@@ -143,6 +142,8 @@ void AddStudent()
 
         Console.Write("Student email: ");
         string studentEmail = Console.ReadLine();
+        Validations.ValidEmail(studentEmail);
+        Validations.IsEmailDuplicate(studentEmail);
 
         Console.Write("Course to enroll in (Frontend/Backend): ");
         string courseName = Console.ReadLine().ToLower();
@@ -158,6 +159,14 @@ void AddStudent()
         {
             Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
         }
+    }
+    catch (DuplicateEmailException ex)
+    {
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
+    }
+    catch (InvalidEmailException ex)
+    {
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
     catch (Exception ex)
     {
@@ -232,7 +241,7 @@ restartRemoveStudent:
                 if (student != null)
                 {
                     Color.WriteLine($"Are you sure you want to remove {student.Name} {student.Surname} from {classroom.Name} ({student.CourseName})?", ConsoleColor.Red);
-                    Color.WriteLine("yes/no", ConsoleColor.Red, ConsoleColor.Black);
+                    Color.WriteLine("yes/no", ConsoleColor.Red);
                     string yesNo = Console.ReadLine().ToLower();
                     if (yesNo == "yes")
                     {
@@ -262,7 +271,7 @@ restartRemoveStudent:
                     }
                     else
                     {
-                        Color.WriteLine("Student not found.",ConsoleColor.DarkRed);
+                        Color.WriteLine("Student not found.", ConsoleColor.DarkRed);
                         Console.ResetColor();
                         Console.WriteLine();
                     }

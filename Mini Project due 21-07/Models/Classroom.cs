@@ -70,13 +70,13 @@ namespace Mini_Project_due_21_07.Models
             {
                 limit = 15;
                 Students.Add(student);
-                Color.WriteLine("Student successfully added.", ConsoleColor.Green, ConsoleColor.Black);
+                Color.WriteLine("Student successfully added.", ConsoleColor.Green);
             }
             else if (CourseName == Course.Frontend)
             {
                 limit = 20;
                 Students.Add(student);
-                Color.WriteLine("Student successfully added.", ConsoleColor.Green, ConsoleColor.Black);
+                Color.WriteLine("Student successfully added.", ConsoleColor.Green);
             }
             else if (Students.Count < limit)
             {
