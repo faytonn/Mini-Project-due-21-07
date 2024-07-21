@@ -116,18 +116,18 @@ void AddClassroom()
         }
         else
         {
-            Color.WriteLine("Course not found, only Frontend and Backend available.", ConsoleColor.White, ConsoleColor.DarkRed);
+            Color.WriteLine("Course not found, only Frontend and Backend available.", ConsoleColor.DarkRed);
             return;
         }
 
         Classroom classroom = new Classroom(className, courseName);
         classrooms.Add(classroom);
         Classroom.SaveClassrooms(classrooms);
-        Color.WriteLine("Classroom sucessfully added.", ConsoleColor.White, ConsoleColor.Green);
+        Color.WriteLine("Classroom sucessfully added.", ConsoleColor.Green);
     }
     catch (Exception ex)
     {
-        Color.WriteLine(ex.Message, ConsoleColor.White, ConsoleColor.DarkRed);
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
 }
 
@@ -156,12 +156,12 @@ void AddStudent()
         }
         else
         {
-            Color.WriteLine("Classroom not found.", ConsoleColor.White, ConsoleColor.DarkRed);
+            Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
         }
     }
     catch (Exception ex)
     {
-        Color.WriteLine(ex.Message, ConsoleColor.White, ConsoleColor.DarkRed);
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
 }
 
@@ -171,7 +171,7 @@ void ShowAllStudents()
     {
         foreach (var classroom in classrooms)
         {
-            Color.WriteLine($"Classroom: {classroom.Name} ({classroom.CourseName})", ConsoleColor.DarkYellow, ConsoleColor.Black);
+            Color.WriteLine($"Classroom: {classroom.Name} ({classroom.CourseName})", ConsoleColor.DarkYellow);
             foreach (var student in classroom.Students)
             {
                 Console.WriteLine($" => [{student.Id}] {student.Name} {student.Surname} \t{student.Email}");
@@ -180,7 +180,7 @@ void ShowAllStudents()
     }
     catch (Exception ex)
     {
-        Color.WriteLine(ex.Message, ConsoleColor.White, ConsoleColor.DarkRed);
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
 }
 
@@ -196,7 +196,7 @@ void ShowAllStudentsInClassroom()
         {
             if (classroom.Students.Count != 0)
             {
-                Color.WriteLine($"Classroom: {classroom.Name} ({classroom.CourseName})", ConsoleColor.DarkYellow, ConsoleColor.Black);
+                Color.WriteLine($"Classroom: {classroom.Name} ({classroom.CourseName})", ConsoleColor.DarkYellow);
                 foreach (var student in classroom.Students)
                 {
                     Console.WriteLine($" => [{student.Id}] {student.Name} {student.Surname} \t{student.Email}");
@@ -204,17 +204,17 @@ void ShowAllStudentsInClassroom()
             }
             else
             {
-                Color.WriteLine("No students in this class yet.", ConsoleColor.DarkYellow, ConsoleColor.Black);
+                Color.WriteLine("No students in this class yet.", ConsoleColor.DarkYellow);
             }
         }
         else
         {
-            Color.WriteLine("Classroom not found.", ConsoleColor.White, ConsoleColor.DarkRed);
+            Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
         }
     }
     catch (Exception ex)
     {
-        Color.WriteLine(ex.Message, ConsoleColor.White, ConsoleColor.DarkRed);
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
 }
 
@@ -231,19 +231,19 @@ restartRemoveStudent:
                 var student = classroom.Students.FirstOrDefault(x => x.Id == studentId);
                 if (student != null)
                 {
-                    Color.WriteLine($"Are you sure you want to remove {student.Name} {student.Surname} from {classroom.Name} ({student.CourseName})?", ConsoleColor.Red, ConsoleColor.Black);
+                    Color.WriteLine($"Are you sure you want to remove {student.Name} {student.Surname} from {classroom.Name} ({student.CourseName})?", ConsoleColor.Red);
                     Color.WriteLine("yes/no", ConsoleColor.Red, ConsoleColor.Black);
                     string yesNo = Console.ReadLine().ToLower();
                     if (yesNo == "yes")
                     {
                         classroom.Students.Remove(student);
                         Classroom.SaveClassrooms(classrooms);
-                        Color.WriteLine("Student successfully removed.", ConsoleColor.Yellow, ConsoleColor.Black);
+                        Color.WriteLine("Student successfully removed.", ConsoleColor.Yellow);
                         return;
                     }
                     else if (yesNo == "no")
                     {
-                        Color.WriteLine("Do you want to go back to the MENU or restart student removal?\n(menu / remove)", ConsoleColor.DarkYellow, ConsoleColor.Black);
+                        Color.WriteLine("Do you want to go back to the MENU or restart student removal?\n(menu / remove)", ConsoleColor.DarkYellow);
                         string menuOrRemove = Console.ReadLine().ToLower();
                         if (menuOrRemove == "menu")
                         {
@@ -255,18 +255,21 @@ restartRemoveStudent:
                         }
                         else
                         {
-                            Color.WriteLine("Wrong command used.", ConsoleColor.White, ConsoleColor.DarkRed);
+                            Color.WriteLine("Wrong command used.", ConsoleColor.DarkRed);
+                            Console.ResetColor();
+                            Console.WriteLine();
                         }
                     }
                     else
                     {
-                        Color.WriteLine("Student not found.", ConsoleColor.White, ConsoleColor.DarkRed);
-
+                        Color.WriteLine("Student not found.",ConsoleColor.DarkRed);
+                        Console.ResetColor();
+                        Console.WriteLine();
                     }
                 }
                 else
                 {
-                    Color.WriteLine("Student not found.", ConsoleColor.White, ConsoleColor.DarkRed);
+                    Color.WriteLine("Student not found.", ConsoleColor.DarkRed);
                     Console.ResetColor();
                     Console.WriteLine();
                 }
@@ -275,7 +278,7 @@ restartRemoveStudent:
     }
     catch (Exception ex)
     {
-        Color.WriteLine(ex.Message, ConsoleColor.White, ConsoleColor.DarkRed);
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
 }
 

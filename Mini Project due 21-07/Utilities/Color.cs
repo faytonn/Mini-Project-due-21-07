@@ -2,12 +2,12 @@
 {
     public static class Color
     {
-        public static void WriteLine(string text, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
+        public static void WriteLine(string text, ConsoleColor color)
         {
-            Console.ForegroundColor = foregroundColor;
-            Console.BackgroundColor = backgroundColor; 
+            Console.ForegroundColor = color;
             Console.WriteLine(text);
             Console.ResetColor();
+            Console.BackgroundColor = color;
         }
     }
 }
