@@ -156,7 +156,7 @@ void AddStudent()
     try
     {
         Classroom.LoadClassrooms();
-  
+
         Console.Write("Course to enroll in (Frontend/Backend): ");
         string courseName = Console.ReadLine().ToLower().Trim();
         if (courseName != "backend" && courseName != "frontend")
@@ -165,7 +165,7 @@ void AddStudent()
             return;
         }
         var classroom = classrooms.FirstOrDefault(x => x.CourseName.ToString().ToLower() == courseName);
-        if (classroom == null) 
+        if (classroom == null)
         {
             Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
 
@@ -181,7 +181,7 @@ void AddStudent()
             return;
         }
 
-    
+
         Console.Write("Student surname: ");
         string studentSurname = Console.ReadLine().Trim();
         if (!Validations.ValidLastName(studentSurname))
@@ -190,7 +190,7 @@ void AddStudent()
             return;
         }
 
-   
+
         Console.Write("Student email: ");
         string studentEmail = Console.ReadLine();
         Validations.ValidEmail(studentEmail);
@@ -207,18 +207,22 @@ void AddStudent()
             else
             {
                 Student student = new Student(studentName, studentSurname, studentEmail);
-                classroom.AddStudent(student, classrooms);
-                Classroom.SaveClassrooms(classrooms);
+                try
+                {
+                    classroom.AddStudent(student, classrooms);
+                    Classroom.SaveClassrooms(classrooms);
+
+                }
+                catch(LimitExceededException ex)
+                {
+                    Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
+                }
             }
         }
         else
         {
             Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
         }
-    }
-    catch (LimitExceededException ex)
-    {
-        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
     catch (DuplicateEmailException ex)
     {
@@ -406,7 +410,7 @@ restartRemoveClassroom:
                             if (classroom.Students.Count < classroom.Students.Capacity)
                             {
                                 student.ClassroomId = classroomId;
-                                classroom.AddStudent(student);
+                                classroom.AddStudent(student, classrooms);
                                 reassigned = true;
                                 break;
                             }
@@ -458,7 +462,7 @@ restartRemoveClassroom:
             }
         }
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
         Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
