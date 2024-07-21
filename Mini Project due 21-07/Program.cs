@@ -3,6 +3,7 @@ using Mini_Project_due_21_07.Enums;
 using Mini_Project_due_21_07.Exceptions;
 using Mini_Project_due_21_07.Models;
 using Mini_Project_due_21_07.Utilities;
+using System.Linq.Expressions;
 
 
 //string classroomsPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Jsons", "classrooms.json");
@@ -60,6 +61,7 @@ restartMenu:
     Console.WriteLine("[3] Show all students");
     Console.WriteLine("[4] Show all students in the chosen classroom");
     Console.WriteLine("[5] Remove a student");
+    Console.WriteLine("[6] Remove a classroom");
     Console.WriteLine("[0] Exit");
 
     List<Student> students = new List<Student>();
@@ -70,19 +72,22 @@ restartMenu:
     {
         case "1":
             AddClassroom();
-            break;
+            goto restartMenu;
         case "2":
             AddStudent();
-            break;
+            goto restartMenu;
         case "3":
             ShowAllStudents();
-            break;
+            goto restartMenu;
         case "4":
             ShowAllStudentsInClassroom();
-            break;
+            goto restartMenu;
         case "5":
             RemoveStudent();
-            break;
+            goto restartMenu;
+        case "6":
+            RemoveClassroomById();
+            goto restartMenu;
         case "0":
             systemProcess = false;
             break;
@@ -98,11 +103,27 @@ void AddClassroom()
 {
     try
     {
+    restartClassName:
         Console.Write("Classroom name: ");
-        string className = Console.ReadLine().ToLower();
+        string className = Console.ReadLine().Trim();
+        if (!Validations.ValidClassName(className))
+        {
+            Color.WriteLine("Classroom name must consist of 2 uppercase letters and 3 digits.", ConsoleColor.DarkRed);
+            goto restartClassName;
+        }
 
+        foreach (var temporaryClassroom in Classroom.LoadClassrooms())
+        {
+            if (temporaryClassroom.Name == className)
+            {
+                Color.WriteLine("Classroom with the given name already exists.", ConsoleColor.Red);
+                goto restartClassName;
+            }
+        }
+
+    restartCourseName:
         Console.Write("Course Name(Frontend/Backend): ");
-        string chosenCourseName = Console.ReadLine().ToLower();
+        string chosenCourseName = Console.ReadLine().ToLower().Trim();
 
         Course courseName;
         if (chosenCourseName == "backend")
@@ -116,7 +137,7 @@ void AddClassroom()
         else
         {
             Color.WriteLine("Course not found, only Frontend and Backend available.", ConsoleColor.DarkRed);
-            return;
+            goto restartCourseName;
         }
 
         Classroom classroom = new Classroom(className, courseName);
@@ -134,31 +155,70 @@ void AddStudent()
 {
     try
     {
+        Classroom.LoadClassrooms();
+  
+        Console.Write("Course to enroll in (Frontend/Backend): ");
+        string courseName = Console.ReadLine().ToLower().Trim();
+        if (courseName != "backend" && courseName != "frontend")
+        {
+            Color.WriteLine("Course not found, only frontend and backend available.", ConsoleColor.DarkRed);
+            return;
+        }
+        var classroom = classrooms.FirstOrDefault(x => x.CourseName.ToString().ToLower() == courseName);
+        if (classroom == null) 
+        {
+            Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
+
+        }
+
+
+
         Console.Write("Student name: ");
-        string studentName = Console.ReadLine();
+        string studentName = Console.ReadLine().Trim();
+        if (!Validations.ValidFirstName(studentName))
+        {
+            Color.WriteLine("Name must start with a capital letter", ConsoleColor.DarkRed);
+            return;
+        }
 
+    
         Console.Write("Student surname: ");
-        string studentSurname = Console.ReadLine();
+        string studentSurname = Console.ReadLine().Trim();
+        if (!Validations.ValidLastName(studentSurname))
+        {
+            Color.WriteLine("Surn ame must start with a capital letter", ConsoleColor.DarkRed);
+            return;
+        }
 
+   
         Console.Write("Student email: ");
         string studentEmail = Console.ReadLine();
         Validations.ValidEmail(studentEmail);
-        Validations.IsEmailDuplicate(studentEmail);
+        Classroom.SaveClassrooms(classrooms);
 
-        Console.Write("Course to enroll in (Frontend/Backend): ");
-        string courseName = Console.ReadLine().ToLower();
 
-        var classroom = classrooms.FirstOrDefault(x => x.CourseName.ToString().ToLower() == courseName);
         if (classroom != null)
         {
-            Student student = new Student(studentName, studentSurname, studentEmail);
-            classroom.AddStudent(student);
-            Classroom.SaveClassrooms(classrooms);
+            if (Validations.IsEmailDuplicate(studentEmail, classroom.Students))
+            {
+                Color.WriteLine("This email already exists in the system.", ConsoleColor.DarkRed);
+                return;
+            }
+            else
+            {
+                Student student = new Student(studentName, studentSurname, studentEmail);
+                classroom.AddStudent(student, classrooms);
+                Classroom.SaveClassrooms(classrooms);
+            }
         }
         else
         {
             Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
         }
+    }
+    catch (LimitExceededException ex)
+    {
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
     catch (DuplicateEmailException ex)
     {
@@ -197,6 +257,12 @@ void ShowAllStudentsInClassroom()
 {
     try
     {
+        Color.WriteLine("Here are all of the existing classrooms:", ConsoleColor.DarkYellow);
+        foreach (var clssrm in classrooms)
+        {
+            Color.WriteLine($"[{clssrm.Id}] {clssrm.Name} ({clssrm.CourseName})", ConsoleColor.DarkYellow);
+        }
+
         Console.Write("Classroom name: ");
         string classroomName = Console.ReadLine().ToLower();
 
@@ -232,6 +298,15 @@ void RemoveStudent()
 restartRemoveStudent:
     try
     {
+        Color.WriteLine("Here are all of the existing students:", ConsoleColor.DarkYellow);
+        foreach (var classroom in classrooms)
+        {
+            Color.WriteLine($"Classroom: {classroom.Name} ({classroom.CourseName})", ConsoleColor.DarkYellow);
+            foreach (var student in classroom.Students)
+            {
+                Console.WriteLine($" => [{student.Id}] {student.Name} {student.Surname} \t{student.Email}");
+            }
+        }
         Console.Write("Student ID: ");
         if (int.TryParse(Console.ReadLine(), out int studentId))
         {
@@ -290,4 +365,107 @@ restartRemoveStudent:
         Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
     }
 }
+
+
+void RemoveClassroomById()
+{
+restartRemoveClassroom:
+    try
+    {
+        Color.WriteLine("Here are all of the existing classrooms:", ConsoleColor.DarkYellow);
+        foreach (var classroom in classrooms)
+        {
+            Color.WriteLine($"[{classroom.Id}] {classroom.Name} ({classroom.CourseName})", ConsoleColor.DarkYellow);
+        }
+        Console.Write("Classroom ID:");
+        if (int.TryParse(Console.ReadLine(), out int classroomId))
+        {
+            var removedClassroom = classrooms.FirstOrDefault(x => x.Id == classroomId);
+            if (removedClassroom != null)
+            {
+                Color.WriteLine($"Are you sure you want to remove [{removedClassroom.Id}] {removedClassroom.Name} ({removedClassroom.CourseName})?\nNOTE: STUDENTS IN THE REMOVED CLASSROOM WILL BE REASSIGNED TO A DIFFERENT CLASS OF {removedClassroom.CourseName} COURSE BY DEFAULT.", ConsoleColor.Red);
+                Color.WriteLine("yes/no", ConsoleColor.Red);
+                string yesNo = Console.ReadLine().ToLower();
+                if (yesNo == "yes")
+                {
+                    var studentsToReassign = new List<Student>(removedClassroom.Students);
+
+                    var availableClassrooms = new List<Classroom>();
+                    foreach (var classroom in classrooms)
+                    {
+                        if (classroom.Id != classroomId && classroom.CourseName == removedClassroom.CourseName && classroom.Students.Count < classroom.Students.Capacity)
+                        {
+                            availableClassrooms.Add(classroom);
+                        }
+                    }
+                    foreach (var student in studentsToReassign)
+                    {
+                        bool reassigned = false;
+                        foreach (var classroom in classrooms)
+                        {
+                            if (classroom.Students.Count < classroom.Students.Capacity)
+                            {
+                                student.ClassroomId = classroomId;
+                                classroom.AddStudent(student);
+                                reassigned = true;
+                                break;
+                            }
+                        }
+                        if (!reassigned)
+                        {
+                            Color.WriteLine("Not enough capacity in other classrooms (or generally no other classrooms) to reassign all students.", ConsoleColor.DarkRed);
+                            removedClassroom.Students.AddRange(studentsToReassign);
+                            return;
+                        }
+                    }
+
+                    classrooms.Remove(removedClassroom);
+                    Classroom.SaveClassrooms(classrooms);
+                    Color.WriteLine("Classroom successfully removed.", ConsoleColor.Yellow);
+                    return;
+                }
+                else if (yesNo == "no")
+                {
+                    Color.WriteLine("Do you want to go back to the MENU or restart classroom removal?\n(menu / remove)", ConsoleColor.DarkYellow);
+                    string menuOrRemove = Console.ReadLine().ToLower();
+                    if (menuOrRemove == "menu")
+                    {
+                        return;     //not sure about this, test it
+                    }
+                    else if (menuOrRemove == "remove")
+                    {
+                        goto restartRemoveClassroom;
+                    }
+                    else
+                    {
+                        Color.WriteLine("Wrong command used.", ConsoleColor.DarkRed);
+                        Console.ResetColor();
+                        Console.WriteLine();
+                    }
+                }
+                else
+                {
+                    Color.WriteLine("Classroom not removed.", ConsoleColor.DarkRed);
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Color.WriteLine("Classroom not found.", ConsoleColor.DarkRed);
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+        }
+    }
+    catch(Exception ex)
+    {
+        Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
+    }
+
+
+
+
+}
+
 

@@ -8,11 +8,12 @@ namespace Mini_Project_due_21_07.Models
 {
     public class Classroom
     {
-        private static int _id;
-        public int Id { get; set; }
+        private static int _id = 0;
+        public int Id { get; private set; }
         public string Name { get; set; }
         public List<Student> Students { get; set; }
         public List<Classroom> Classrooms { get; set; }
+        
         public Course CourseName { get; set; }
 
         public Classroom(string name, Course courseName)
@@ -35,7 +36,7 @@ namespace Mini_Project_due_21_07.Models
                 {
                     string result = streamReader.ReadToEnd();
                     List<Classroom> loadedClassrooms = JsonConvert.DeserializeObject<List<Classroom>>(result);
-                    if (loadedClassrooms != null)
+                    if (loadedClassrooms == null)
                     {
                         return new List<Classroom>();
                     }
@@ -63,28 +64,36 @@ namespace Mini_Project_due_21_07.Models
 
 
 
-        public void AddStudent(Student student)
+        public void AddStudent(Student student, List<Classroom> classrooms)
         {
             int limit = 0;
             if (CourseName == Course.Backend)
             {
                 limit = 15;
-                Students.Add(student);
-                Color.WriteLine("Student successfully added.", ConsoleColor.Green);
             }
             else if (CourseName == Course.Frontend)
             {
                 limit = 20;
-                Students.Add(student);
-                Color.WriteLine("Student successfully added.", ConsoleColor.Green);
             }
-            else if (Students.Count < limit)
+
+            if (Students.Count < limit)
             {
-                throw new LimitExceededException("Limit was exceeded. Backend classes can have 15 students, Frontend classes can have 20 students maximum.");
+               Students.Add(student);
+                Color.WriteLine("Student successfully added.", ConsoleColor.Green);
             }
             else
             {
-                throw new ClassroomNotFoundException("Classroom not found.");
+                Classroom otherClassroom = classrooms.FirstOrDefault(c => c.CourseName == this.CourseName && c.Students.Count < limit);
+                
+                if (otherClassroom != null)
+                {
+                    otherClassroom.AddStudent(student, classrooms);
+                    Color.WriteLine($"Classroom {this.Name} is full. Student added to classroom {otherClassroom.Name}.", ConsoleColor.DarkCyan);
+                }
+                else
+                {
+                    throw new LimitExceededException("All classrooms for this course are full.");
+                }
             }
 
 
@@ -102,7 +111,7 @@ namespace Mini_Project_due_21_07.Models
             throw new StudentNotFoundException("Student not found.");
         }
 
-        public  Student RemoveStudent(Student student, int studentId)
+        public Student RemoveStudent(Student student, int studentId)
         {
             for (int i = 0; i < Students.Count; i++)
             {
@@ -115,9 +124,29 @@ namespace Mini_Project_due_21_07.Models
                         Students[j] = Students[j + 1];
                     }
 
+                        return removedStudent;
                 }
             }
             throw new StudentNotFoundException("Student not found.");
+        }
+
+        public Classroom RemoveClassroom(Classroom classroom, int classroomId)
+        {
+            for (int i = 0; i < Students.Count; i++)
+            {
+                if (classroom.Id == classroomId)
+                {
+                    Classroom removedClassroom = Classrooms[i];
+
+                    for (int j = i; j < Classrooms.Count - 1; j++)
+                    {
+                        Classrooms[j] = Classrooms[j + 1];
+                    }
+
+                    return removedClassroom;
+                }
+            }
+            throw new StudentNotFoundException("Classroom not found.");
         }
 
         public override string ToString()
