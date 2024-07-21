@@ -2,16 +2,15 @@
   {
     "Id": 2,
     "Name": "pb303",
-    "Students": [
-      {
-        "Id": 2,
-        "Name": "Gunel ",
-        "Surname": "Qehramani",
-        "Email": "gunel@gmail.com",
-        "CourseName": 0
-      }
-    ],
+    "Students": [],
     "Classrooms": null,
     "CourseName": 0
+  },
+  {
+    "Id": 3,
+    "Name": "pb041",
+    "Students": [],
+    "Classrooms": null,
+    "CourseName": 1
   }
 ]
