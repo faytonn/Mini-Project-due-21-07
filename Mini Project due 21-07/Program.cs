@@ -91,6 +91,9 @@ restartMenu:
         case "0":
             systemProcess = false;
             break;
+        default:
+            Color.WriteLine("wrong command used", ConsoleColor.DarkRed);
+            break;
 
     }
 
@@ -204,19 +207,17 @@ void AddStudent()
                 Color.WriteLine("This email already exists in the system.", ConsoleColor.DarkRed);
                 return;
             }
-            else
-            {
-                Student student = new Student(studentName, studentSurname, studentEmail);
-                try
-                {
-                    classroom.AddStudent(student, classrooms);
-                    Classroom.SaveClassrooms(classrooms);
 
-                }
-                catch(LimitExceededException ex)
-                {
-                    Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
-                }
+            Student student = new Student(studentName, studentSurname, studentEmail);
+            try
+            {
+                classroom.AddStudent(student, classrooms);
+                Classroom.SaveClassrooms(classrooms);
+
+            }
+            catch (LimitExceededException ex)
+            {
+                Color.WriteLine(ex.Message, ConsoleColor.DarkRed);
             }
         }
         else
@@ -376,6 +377,7 @@ void RemoveClassroomById()
 restartRemoveClassroom:
     try
     {
+        Classroom.LoadClassrooms();
         Color.WriteLine("Here are all of the existing classrooms:", ConsoleColor.DarkYellow);
         foreach (var classroom in classrooms)
         {
@@ -384,46 +386,25 @@ restartRemoveClassroom:
         Console.Write("Classroom ID:");
         if (int.TryParse(Console.ReadLine(), out int classroomId))
         {
-            var removedClassroom = classrooms.FirstOrDefault(x => x.Id == classroomId);
-            if (removedClassroom != null)
+            var classroomToRemove = classrooms.FirstOrDefault(x => x.Id == classroomId);
+            if (classroomToRemove != null)
             {
-                Color.WriteLine($"Are you sure you want to remove [{removedClassroom.Id}] {removedClassroom.Name} ({removedClassroom.CourseName})?\nNOTE: STUDENTS IN THE REMOVED CLASSROOM WILL BE REASSIGNED TO A DIFFERENT CLASS OF {removedClassroom.CourseName} COURSE BY DEFAULT.", ConsoleColor.Red);
+                Color.WriteLine($"Are you sure you want to remove [{classroomToRemove.Id}] {classroomToRemove.Name} ({classroomToRemove.CourseName})?\nNOTE: STUDENTS IN THE REMOVED CLASSROOM WILL BE REASSIGNED TO A DIFFERENT CLASS OF {classroomToRemove.CourseName} COURSE BY DEFAULT.", ConsoleColor.Red);
                 Color.WriteLine("yes/no", ConsoleColor.Red);
                 string yesNo = Console.ReadLine().ToLower();
                 if (yesNo == "yes")
                 {
-                    var studentsToReassign = new List<Student>(removedClassroom.Students);
+                    var otherClassroom = classrooms.FirstOrDefault(x => x.CourseName == classroomToRemove.CourseName && x.Id != classroomId);
 
-                    var availableClassrooms = new List<Classroom>();
-                    foreach (var classroom in classrooms)
+                    if (otherClassroom != null)
                     {
-                        if (classroom.Id != classroomId && classroom.CourseName == removedClassroom.CourseName && classroom.Students.Count < classroom.Students.Capacity)
+                        foreach (var student in classroomToRemove.Students)
                         {
-                            availableClassrooms.Add(classroom);
-                        }
-                    }
-                    foreach (var student in studentsToReassign)
-                    {
-                        bool reassigned = false;
-                        foreach (var classroom in classrooms)
-                        {
-                            if (classroom.Students.Count < classroom.Students.Capacity)
-                            {
-                                student.ClassroomId = classroomId;
-                                classroom.AddStudent(student, classrooms);
-                                reassigned = true;
-                                break;
-                            }
-                        }
-                        if (!reassigned)
-                        {
-                            Color.WriteLine("Not enough capacity in other classrooms (or generally no other classrooms) to reassign all students.", ConsoleColor.DarkRed);
-                            removedClassroom.Students.AddRange(studentsToReassign);
-                            return;
+                            otherClassroom.AddStudent(student, classrooms);
                         }
                     }
 
-                    classrooms.Remove(removedClassroom);
+                    classrooms.Remove(classroomToRemove);
                     Classroom.SaveClassrooms(classrooms);
                     Color.WriteLine("Classroom successfully removed.", ConsoleColor.Yellow);
                     return;
