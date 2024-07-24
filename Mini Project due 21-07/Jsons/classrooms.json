@@ -1,1 +1,146 @@
-[]
+[
+  {
+    "Id": 1,
+    "Name": "PB303",
+    "Students": [
+      {
+        "Id": 0,
+        "Name": "IHihiuhui",
+        "Surname": "IUHihiu",
+        "Email": "IUHi@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "HBHHUji",
+        "Surname": "IBiuiu",
+        "Email": "fatima@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "GIUHI",
+        "Surname": "IUIUBUI",
+        "Email": "ODUO@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AIUFNYIAEFN",
+        "Surname": "AWIUDNYAWU",
+        "Email": "IAWUO@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIDUYNAIUN",
+        "Surname": "AWIUDYNAWIU",
+        "Email": "AWUIDYNAWINWAYNDI@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIDUNYWIUA",
+        "Surname": "AWIDUNYWAIUDNAW",
+        "Email": "AIWDNYIU@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIUDNYIWU",
+        "Surname": "AWIUDNYAWIU",
+        "Email": "AWUIDINY@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIDYNAWIU",
+        "Surname": "AWIDUNYAWIU",
+        "Email": "WAUODYNAO@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIDUYNAWUOD",
+        "Surname": "AWIDNWAIUDNAW",
+        "Email": "AWIUDYNAWINYDAUW@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AIUEYNIANWINDWA",
+        "Surname": "AWUNAWUDWAUIAWDAW",
+        "Email": "AWIUDAWD@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIUDNYAW",
+        "Surname": "AWDIUWNUDA",
+        "Email": "AIWNYDIUAW@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 0,
+        "Name": "AWIUNYDNWYUA",
+        "Surname": "AWUDYNAWUIIDAYDAI",
+        "Email": "AWUIDNYAIWNIAW@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 1,
+        "Name": "AIWDNYWYIDAW",
+        "Surname": "AWDUYNAWIYNDAWUI",
+        "Email": "AWDIUNYAWIU@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 2,
+        "Name": "AUIDYNAIUNYIDAW",
+        "Surname": "AWDIUNYAWIUYDNIAUW",
+        "Email": "AWDIUYANWUIDAN@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      },
+      {
+        "Id": 3,
+        "Name": "ADUYNAWNYWUIA",
+        "Surname": "AWDIUYAWIUDNYAWIU",
+        "Email": "AWIDNYAWIYIUWD@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      }
+    ],
+    "Classrooms": null,
+    "CourseName": 0
+  },
+  {
+    "Id": 3,
+    "Name": "BA041",
+    "Students": [
+      {
+        "Id": 4,
+        "Name": "AIWUDYNIAWDUIA",
+        "Surname": "AWUDNAWIDYAIW",
+        "Email": "AEUDYNAUI@.",
+        "CourseName": 0,
+        "ClassroomId": 0
+      }
+    ],
+    "Classrooms": null,
+    "CourseName": 0
+  }
+]
